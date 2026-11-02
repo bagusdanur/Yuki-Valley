@@ -23,7 +23,9 @@ svg.luc { display: inline-block; vertical-align: -3px; flex: none; }
 .badge { position: absolute; top: -7px; right: -7px; background: #e0483e; color: #fff; border: 2px solid #fff; border-radius: 999px; min-width: 20px; height: 20px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; padding: 0 4px; }
 
 /* ===== Hotbar ===== */
-#hotbar { position: absolute; left: 50%; bottom: calc(8px + env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; }
+#hotbar { position: absolute; left: 50%; bottom: calc(8px + env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; transition: transform .28s ease, opacity .28s ease; }
+#hotbar.collapsed { transform: translateX(58vw); opacity: 0; pointer-events: none; }
+#hotbarToggle { position: absolute; right: 10px; bottom: calc(17px + env(safe-area-inset-bottom)); width: 34px; height: 34px; z-index: 6; background: rgba(43,32,20,.95); border: 2px solid #d9b26a; border-radius: 10px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .slot { width: 50px; padding: 4px 1px 2px; background: rgba(43,32,20,.95); border: 2px solid #3d2b1f; border-radius: 10px; color: #fff; cursor: pointer; text-align: center; line-height: 1.1; box-shadow: 0 2px 8px rgba(0,0,0,.25); }
 .slot svg { width: 16px; height: 16px; }
 .slot small { display: block; font-size: 10px; font-weight: 700; opacity: .9; margin-top: 2px; }
@@ -93,7 +95,9 @@ svg.luc { display: inline-block; vertical-align: -3px; flex: none; }
      supaya jempol tidak perlu menekuk ke paling bawah layar. */
   #dpad { bottom: calc(88px + env(safe-area-inset-bottom)); }
   #btnAct { bottom: calc(104px + env(safe-area-inset-bottom)); }
-  #hotbar { left: 8px; right: 8px; transform: none; bottom: calc(240px + env(safe-area-inset-bottom)); }
+  #hotbar { left: 8px; right: 54px; transform: none; bottom: calc(240px + env(safe-area-inset-bottom)); }
+  #hotbar.collapsed { transform: translateX(calc(100% + 62px)); }
+  #hotbarToggle { right: 8px; bottom: calc(249px + env(safe-area-inset-bottom)); }
   .slot { flex: 1 1 0; width: auto; min-width: 0; padding: 5px 1px 3px; }
   .slot small { font-size: 9px; }
   #toast { top: calc(106px + env(safe-area-inset-top)); font-size: 13.5px; }

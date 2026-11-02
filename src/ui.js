@@ -20,6 +20,7 @@ export class UI {
     this.cb = cb;
     this.shopOpen = false;
     this.questOpen = false;
+    this.hotbarOpen = true;
     this.paused = false;
     this._toastTimer = null;
     // sematkan ikon statis dari atribut data-ic
@@ -37,6 +38,8 @@ export class UI {
       hb.appendChild(b);
       this.slotEls[t.id] = b;
     }
+    // tombol panah penutup menu alat (hotbar geser ke kanan)
+    $('hotbarToggle').addEventListener('click', () => this.toggleHotbar());
     // tombol HUD
     $('btnSound').addEventListener('click', () => cb.onSound());
     $('btnFull').addEventListener('click', () => cb.onFullscreen());
@@ -66,8 +69,13 @@ export class UI {
   }
   hideStart() { $('startScreen').classList.add('hidden'); }
   showStartScreen() { $('startScreen').classList.remove('hidden'); }
-  showGameUI() { $('hud').classList.remove('hidden'); $('hotbar').classList.remove('hidden'); $('touch').classList.remove('hidden'); }
-  hideGameUI() { $('hud').classList.add('hidden'); $('hotbar').classList.add('hidden'); $('touch').classList.add('hidden'); }
+  showGameUI() { $('hud').classList.remove('hidden'); $('hotbar').classList.remove('hidden'); $('hotbarToggle').classList.remove('hidden'); $('touch').classList.remove('hidden'); }
+  hideGameUI() { $('hud').classList.add('hidden'); $('hotbar').classList.add('hidden'); $('hotbarToggle').classList.add('hidden'); $('touch').classList.add('hidden'); }
+  toggleHotbar() {
+    this.hotbarOpen = !this.hotbarOpen;
+    $('hotbar').classList.toggle('collapsed', !this.hotbarOpen);
+    $('hotbarToggle').innerHTML = icon(this.hotbarOpen ? 'chevrons-right' : 'chevrons-left', 18);
+  }
   openSettings() { $('settingsPanel').classList.remove('hidden'); }
   closeSettings() { $('settingsPanel').classList.add('hidden'); }
   openCredit() { $('creditPanel').classList.remove('hidden'); }
