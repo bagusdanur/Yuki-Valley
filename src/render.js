@@ -14,9 +14,31 @@ export class Renderer {
     this.cam = { x: 0, y: 0 };
     this.particles = [];
     this.resize();
+    this.buildGround();
+  }
+  // Seluruh latar statis (rumput, jalan, tanah & bingkai ladang) digambar
+  // SEKALI ke kanvas terpisah; tiap frame tinggal ditempel satu kali.
+  // Ini memangkas ratusan drawImage per frame — kunci ringannya di HP.
+  buildGround() {
+    const g = document.createElement('canvas');
+    g.width = WORLD_W * TS; g.height = WORLD_H * TS;
+    const c = g.getContext('2d');
+    c.imageSmoothingEnabled = false;
+    const at = (cell, dx, dy) => c.drawImage(this.img.atlas, cell[0] * 16, cell[1] * 16, 16, 16, dx, dy, TS, TS);
+    for (let y = 0; y < WORLD_H; y++) for (let x = 0; x < WORLD_W; x++) {
+      at(ATLAS.grass[hash(x, y) % 4], x * TS, y * TS);
+      if (isPath(x, y)) { c.fillStyle = 'rgba(214,183,120,0.5)'; c.fillRect(x * TS, y * TS, TS, TS); }
+    }
+    for (let y = FIELD.y; y < FIELD.y + FIELD.h; y++) for (let x = FIELD.x; x < FIELD.x + FIELD.w; x++)
+      at(ATLAS.dirt[hash(x, y) % 3], x * TS, y * TS);
+    c.strokeStyle = 'rgba(90,55,25,0.55)'; c.lineWidth = 3;
+    c.strokeRect(FIELD.x * TS + 1, FIELD.y * TS + 1, FIELD.w * TS - 2, FIELD.h * TS - 2);
+    this.ground = g;
   }
   resize() {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
+    // DPR dibatasi 1.5: piksel yang digambar turun ~44% vs DPR 2, gambar
+    // pixel-art tetap tajam (smoothing mati), baterai & GPU HP jauh lega.
+    const dpr = Math.min(devicePixelRatio || 1, 1.5);
     this.vw = this.cv.clientWidth; this.vh = this.cv.clientHeight;
     this.cv.width = Math.round(this.vw * dpr);
     this.cv.height = Math.round(this.vh * dpr);
@@ -52,25 +74,25 @@ export class Renderer {
     if (WORLD_H * TS < vh) this.cam.y = (WORLD_H * TS - vh) / 2;
     const cam = this.cam;
     ctx.fillStyle = '#79b657'; ctx.fillRect(0, 0, vw, vh);
+    // Tempel lapisan tanah pra-gambar: satu drawImage untuk seluruh latar.
+    const rx = Math.round(cam.x), ry = Math.round(cam.y);
+    const gx = Math.max(rx, 0), gy = Math.max(ry, 0);
+    const gw = Math.min(vw - (gx - rx), WORLD_W * TS - gx), gh = Math.min(vh - (gy - ry), WORLD_H * TS - gy);
+    if (gw > 0 && gh > 0) ctx.drawImage(this.ground, gx, gy, gw, gh, gx - rx, gy - ry, gw, gh);
     ctx.save();
-    ctx.translate(-Math.round(cam.x), -Math.round(cam.y));
+    ctx.translate(-rx, -ry);
 
     const x0 = Math.max(0, Math.floor(cam.x / TS)), x1 = Math.min(WORLD_W - 1, Math.ceil((cam.x + vw) / TS));
     const y0 = Math.max(0, Math.floor(cam.y / TS)), y1 = Math.min(WORLD_H - 1, Math.ceil((cam.y + vh) / TS));
 
-    // ---- lapisan dasar: rumput, jalan, ladang, kolam ----
-    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
-      this.atlas(ATLAS.grass[hash(x, y) % 4], x * TS, y * TS);
-      if (isPath(x, y)) { ctx.fillStyle = 'rgba(214,183,120,0.5)'; ctx.fillRect(x * TS, y * TS, TS, TS); }
-    }
-    for (let y = FIELD.y; y < FIELD.y + FIELD.h; y++) for (let x = FIELD.x; x < FIELD.x + FIELD.w; x++) {
-      this.atlas(ATLAS.dirt[hash(x, y) % 3], x * TS, y * TS);
+    // ---- lapisan dinamis di atas tanah: tinta ladang & kolam ----
+    const fx0 = Math.max(FIELD.x, x0), fx1 = Math.min(FIELD.x + FIELD.w - 1, x1);
+    const fy0 = Math.max(FIELD.y, y0), fy1 = Math.min(FIELD.y + FIELD.h - 1, y1);
+    for (let y = fy0; y <= fy1; y++) for (let x = fx0; x <= fx1; x++) {
       const c = state.field[x + ',' + y];
       if (!c || !c.tilled) { ctx.fillStyle = 'rgba(255,246,200,0.28)'; ctx.fillRect(x * TS, y * TS, TS, TS); }
       if (c && c.crop && c.watered) { ctx.fillStyle = 'rgba(70,40,15,0.30)'; ctx.fillRect(x * TS, y * TS, TS, TS); }
     }
-    ctx.strokeStyle = 'rgba(90,55,25,0.55)'; ctx.lineWidth = 3;
-    ctx.strokeRect(FIELD.x * TS + 1, FIELD.y * TS + 1, FIELD.w * TS - 2, FIELD.h * TS - 2);
     const wf = Math.floor(now / 900) % 4;
     for (let y = POND.y; y < POND.y + POND.h; y++) for (let x = POND.x; x < POND.x + POND.w; x++)
       this.atlas(ATLAS.water[(wf + x + y) % 4], x * TS, y * TS);
