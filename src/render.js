@@ -95,7 +95,14 @@ export class Renderer {
       const [tx2, ty2] = k.split(',').map(Number), st = stageOf(c);
       const fn = () => {
         ctx.drawImage(this.img.plants, (1 + st) * 16, (c.crop === 'jagung' ? 0 : 1) * 16, 16, 16, tx2 * TS + 4, ty2 * TS + 2, 40, 40);
-        if (isRipe(c)) { ctx.font = '15px sans-serif'; ctx.fillText('✨', tx2 * TS + 30, ty2 * TS + 12); }
+        if (isRipe(c)) { // bintang emas "matang" digambar vektor (tanpa emoji)
+          const sx = tx2 * TS + 37, sy = ty2 * TS + 9;
+          ctx.fillStyle = '#ffd94d'; ctx.strokeStyle = '#b57f17'; ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(sx, sy - 7); ctx.quadraticCurveTo(sx + 1.8, sy - 1.8, sx + 7, sy);
+          ctx.quadraticCurveTo(sx + 1.8, sy + 1.8, sx, sy + 7); ctx.quadraticCurveTo(sx - 1.8, sy + 1.8, sx - 7, sy);
+          ctx.quadraticCurveTo(sx - 1.8, sy - 1.8, sx, sy - 7); ctx.closePath(); ctx.fill(); ctx.stroke();
+        }
       };
       if (st >= 2) draws.push({ y: (ty2 + 1) * TS, fn }); else fn();
     }
@@ -154,7 +161,7 @@ export class Renderer {
     // papan nama
     ctx.fillStyle = '#3b2a1a'; ctx.fillRect(sx + w / 2 - 34, sy + 24, 68, 18);
     ctx.fillStyle = '#ffe9b0'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('🛒 TOKO', sx + w / 2, sy + 37); ctx.textAlign = 'left';
+    ctx.fillText('TOKO', sx + w / 2, sy + 37); ctx.textAlign = 'left';
   }
   drawPlayer(p) {
     const row = DIRROW[p.dir], f = p.moving ? p.frame : 0;

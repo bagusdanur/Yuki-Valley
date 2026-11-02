@@ -12,16 +12,17 @@
 
   <!-- HUD atas -->
   <div id="hud" class="hidden">
-    <div class="chip">📅 Hari <b id="hDay">1</b></div>
-    <div class="chip">🕐 <b id="hClock">06:00</b></div>
-    <div class="chip" id="hWeather">☀️ Cerah</div>
-    <div class="chip">🪙 <b id="hCoin">0</b></div>
-    <div class="chip energy">⚡ <div class="bar"><div id="hEnergy"></div></div></div>
-    <div class="chip">🎒 <span id="hBag">kosong</span></div>
+    <div class="chip"><span class="ic" data-ic="calendar"></span>Hari <b id="hDay">1</b></div>
+    <div class="chip"><span class="ic" data-ic="clock"></span><b id="hClock">06:00</b></div>
+    <div class="chip" id="hWeather"></div>
+    <div class="chip"><span class="ic" data-ic="coins"></span><b id="hCoin">0</b></div>
+    <div class="chip energy"><span class="ic" data-ic="zap"></span><div class="bar"><div id="hEnergy"></div></div></div>
+    <div class="chip"><span class="ic" data-ic="backpack"></span><span id="hBag">kosong</span></div>
     <div class="spacer"></div>
-    <button class="icon-btn" id="btnSound" title="Suara">🔊</button>
-    <button class="icon-btn" id="btnFull" title="Layar penuh">⛶</button>
-    <button class="icon-btn" id="btnPause" title="Jeda">⏸️</button>
+    <button class="icon-btn badge-btn" id="btnQuest" title="Misi harian"><span data-ic="scroll-text"></span><span id="questBadge" class="badge hidden">0</span></button>
+    <button class="icon-btn" id="btnSound" title="Suara"><span data-ic="volume-2"></span></button>
+    <button class="icon-btn" id="btnFull" title="Layar penuh"><span data-ic="maximize"></span></button>
+    <button class="icon-btn" id="btnPause" title="Jeda"><span data-ic="pause"></span></button>
   </div>
 
   <!-- Hotbar alat -->
@@ -30,11 +31,11 @@
   <!-- Kontrol sentuh -->
   <div id="touch" class="hidden">
     <div id="dpad">
-      <span></span><button data-dir="up">▲</button><span></span>
-      <button data-dir="left">◀</button><span></span><button data-dir="right">▶</button>
-      <span></span><button data-dir="down">▼</button><span></span>
+      <span></span><button data-dir="up"><svg class="luc" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg></button><span></span>
+      <button data-dir="left"><svg class="luc" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button><span></span><button data-dir="right"><svg class="luc" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <span></span><button data-dir="down"><svg class="luc" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><span></span>
     </div>
-    <button id="btnAct">AKSI</button>
+    <button id="btnAct"><span data-ic="hand" data-sz="24"></span><span>AKSI</span></button>
   </div>
 
   <div id="toast"></div>
@@ -43,37 +44,51 @@
   <!-- Panel toko -->
   <div id="shop" class="panel hidden">
     <div class="panel-box">
-      <div class="panel-head">🛒 Toko Benih <button class="x" id="shopClose">✖</button></div>
+      <div class="panel-head"><span class="ph-t"><span class="ic" data-ic="shopping-cart"></span>Toko Benih</span><button class="x" id="shopClose"><span data-ic="x"></span></button></div>
       <div id="shopItems"></div>
       <p class="panel-note">Hasil panen & produk hewan dijual lewat <b>Peti Pengiriman</b> kayu di samping rumah. Berdiri di depannya lalu tekan AKSI.</p>
+    </div>
+  </div>
+
+  <!-- Panel misi -->
+  <div id="questPanel" class="panel hidden">
+    <div class="panel-box">
+      <div class="panel-head"><span class="ph-t"><span class="ic" data-ic="scroll-text"></span>Misi Harian</span><button class="x" id="questClose"><span data-ic="x"></span></button></div>
+      <div id="questItems"></div>
+      <p class="panel-note">Selesaikan misi untuk hadiah koin. Misi berganti setiap hari baru — tidur di pintu rumah untuk lanjut ke hari berikutnya.</p>
     </div>
   </div>
 
   <!-- Layar jeda -->
   <div id="pauseMenu" class="panel hidden">
     <div class="panel-box center">
-      <div class="panel-head">⏸️ Jeda</div>
-      <button class="menu-btn" id="pmResume">▶️ Lanjutkan</button>
-      <button class="menu-btn" id="pmSave">💾 Simpan Permainan</button>
-      <button class="menu-btn" id="pmSound">🔊 Suara: Nyala</button>
-      <button class="menu-btn danger" id="pmRestart">🗑️ Game Baru (hapus simpanan)</button>
+      <div class="panel-head"><span class="ph-t"><span class="ic" data-ic="pause"></span>Jeda</span></div>
+      <button class="menu-btn" id="pmResume"><span class="ic" data-ic="play"></span><span>Lanjutkan</span></button>
+      <button class="menu-btn" id="pmSave"><span class="ic" data-ic="save"></span><span>Simpan Permainan</span></button>
+      <button class="menu-btn" id="pmSound"></button>
+      <button class="menu-btn danger" id="pmRestart"><span class="ic" data-ic="trash-2"></span><span>Game Baru (hapus simpanan)</span></button>
     </div>
   </div>
 
   <!-- Layar awal -->
   <div id="startScreen">
     <div class="start-box">
-      <div class="logo">🌾 Yuki Valley</div>
-      <div class="tagline">Game farming pixel ala Harvest Town</div>
-      <button class="menu-btn big hidden" id="btnContinue">▶️ Lanjutkan Permainan</button>
-      <button class="menu-btn big" id="btnPlay">🌱 Game Baru</button>
+      <div class="logo"><span class="ic" data-ic="wheat" data-sz="44"></span> Yuki Valley</div>
+      <div class="tagline">Game farming pixel ala Harvest Town — mode portrait</div>
+      <button class="menu-btn big hidden" id="btnContinue"><span class="ic" data-ic="play"></span><span>Lanjutkan Permainan</span></button>
+      <button class="menu-btn big" id="btnPlay"><span class="ic" data-ic="sprout"></span><span>Game Baru</span></button>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div class="step-t"><b>Bertani</b><small>Cangkul, tanam, siram</small></div></div>
+        <div class="step"><div class="step-n">2</div><div class="step-t"><b>Panen & jual</b><small>Panen, lalu jual di peti kayu</small></div></div>
+        <div class="step"><div class="step-n">3</div><div class="step-t"><b>Selesaikan misi</b><small>Klaim hadiah koin tiap hari</small></div></div>
+      </div>
       <div class="howto">
         <b>Cara main:</b> Jalan dengan WASD / panah / D-pad. Hadapkan karakter ke target, tekan <b>Spasi / E / AKSI</b>.<br>
-        ⛏️ Cangkul tanah → 🌱 tanam → 💧 siram → 💤 tidur di pintu rumah → ✋ panen → jual di peti kayu.<br>
-        Kunjungi 🛒 <b>stand toko</b> untuk beli benih & pupuk, perah 🐄 sapi dan pungut 🥚 telur ayam di kandang.<br>
-        Hari berjalan 06:00–22:00. Jaga ⚡ energimu. Target: kumpulkan <b>1.000 koin</b> dari hasil jualan!
+        <span class="ic" data-ic="shovel" data-sz="14"></span> Cangkul tanah cokelat, <span class="ic" data-ic="sprout" data-sz="14"></span> tanam benih, <span class="ic" data-ic="droplets" data-sz="14"></span> siram, lalu <span class="ic" data-ic="moon" data-sz="14"></span> tidur di pintu rumah supaya tanaman tumbuh. <span class="ic" data-ic="hand" data-sz="14"></span> Panen yang matang dan jual di peti kayu.<br>
+        Kunjungi stand <span class="ic" data-ic="store" data-sz="14"></span> <b>toko</b> untuk beli benih & pupuk, perah sapi dan pungut telur ayam di kandang. Buka <span class="ic" data-ic="scroll-text" data-sz="14"></span> <b>Misi</b> dari tombol di atas untuk hadiah koin harian.<br>
+        Hari berjalan 06:00–22:00. Jaga energimu. Target utama: kumpulkan <b>1.000 koin</b> dari hasil jualan!
       </div>
-      <div class="credit">Asset: “Sprout Lands” oleh Cup Nooble (itch.io, paket basic gratis, non-komersial)</div>
+      <div class="credit">Grafik: “Sprout Lands” oleh Cup Nooble (itch.io, paket basic gratis, non-komersial) • Ikon: Lucide (ISC) • Suara: Kenney (CC0)</div>
     </div>
   </div>
 </div>

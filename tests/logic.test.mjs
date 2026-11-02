@@ -4,6 +4,7 @@ import { isSolid, isPenFence } from '../src/world.js';
 import { cellAt, stageOf, isRipe, startNewDay } from '../src/farming.js';
 import { createPlayer, createAnimals, frontTile, animalAtTile } from '../src/entities.js';
 import { PEN, DOOR } from '../src/config.js';
+import { generateQuests, applyProgress, claimReward, claimableCount } from '../src/quests.js';
 
 let fails = 0;
 function check(name, cond) { console.log((cond ? 'PASS' : 'FAIL') + ' ' + name); if (!cond) fails++; }
@@ -64,6 +65,25 @@ check('berdiri di depan rumah hadap atas -> tile pintu', f.tx === DOOR.x && f.ty
 const animals = createAnimals();
 const cow = animalAtTile(animals, PEN.x + 4, PEN.y + 2);
 check('sapi ditemukan di tile kandang awal', !!cow && cow.kind === 'cow');
+
+// --- misi harian
+const q1 = generateQuests(1), q1b = generateQuests(1), q2 = generateQuests(2);
+check('misi: 3 misi per hari, deterministik per hari', q1.length === 3 && JSON.stringify(q1) === JSON.stringify(q1b));
+check('misi: tipe tidak berulang dalam satu hari', new Set(q1.map(q => q.type + '|' + (q.crop || ''))).size === 3);
+check('misi: hari lain, susunan id berbeda', q2[0].id.startsWith('q2-') && q1[0].id.startsWith('q1-'));
+const qs = [
+  { id: 't1', type: 'harvest', crop: null, target: 2, reward: 30, progress: 0, done: false, claimed: false, icon: 'sprout', text: 'Panen 2 tanaman' },
+  { id: 't2', type: 'water', crop: null, target: 5, reward: 25, progress: 0, done: false, claimed: false, icon: 'droplets', text: 'Siram 5 tanaman' }
+];
+const fin = applyProgress(qs, 'harvest', 2, 'jagung');
+check('misi: progres mencapai target -> selesai tepat sekali', fin.length === 1 && qs[0].done && qs[0].progress === 2);
+check('misi: progres setelah selesai tidak dihitung lagi', applyProgress(qs, 'harvest', 1, 'jagung').length === 0);
+const sq = createState(); sq.quests = qs;
+const before = sq.coins;
+const got = claimReward(sq, qs[0].id);
+check('misi: klaim menambah koin sebesar hadiah, sekali saja', got === qs[0].reward && sq.coins === before + got && claimReward(sq, qs[0].id) === 0);
+check('misi: claimableCount 0 setelah diklaim', claimableCount(sq) === 0);
+check('state awal punya field misi kosong', Array.isArray(s.quests) && s.questDay === 0);
 
 console.log(fails ? `\n${fails} KEGAGALAN` : '\nSEMUA LULUS');
 process.exit(fails ? 1 : 0);

@@ -1,6 +1,6 @@
-# 🌾 Yuki Valley — Mini Harvest
+# Yuki Valley — Mini Harvest
 
-Game farming pixel 2D ala Harvest Town, ditulis dengan **JavaScript modular murni** (ES Modules, tanpa framework/game engine) dan berjalan di browser. Fullscreen landscape, bisa dimainkan dengan keyboard maupun layar sentuh.
+Game farming pixel 2D ala Harvest Town, ditulis dengan **JavaScript modular murni** (ES Modules, tanpa framework/game engine) dan berjalan di browser. **Mode portrait** (tegak, nyaman di HP), bisa dimainkan dengan keyboard maupun layar sentuh. Seluruh UI memakai ikon vektor **Lucide** (tanpa emoji), efek suara asli dari paket **Kenney (CC0)**, dan ada **sistem misi harian** berhadiah koin.
 
 ## Cara menjalankan
 
@@ -16,7 +16,7 @@ python3 -m http.server 8000
 # lalu buka http://localhost:8000
 ```
 
-Di HP: jalankan server di komputer dalam jaringan Wi-Fi yang sama, lalu buka `http://<ip-komputer>:5173` dari browser HP dan mainkan secara landscape.
+Di HP: jalankan server di komputer dalam jaringan Wi-Fi yang sama, lalu buka `http://<ip-komputer>:5173` dari browser HP dan mainkan secara portrait (tegak).
 
 ## Mode debug (edit sambil jalan)
 
@@ -39,9 +39,10 @@ Alur debug yang disarankan:
 - **Gerak:** WASD / tombol panah / D-pad di layar
 - **Aksi:** Spasi / E / tombol AKSI — hadapkan karakter ke targetnya dulu
 - **Ganti alat:** klik slot hotbar atau tombol 1–6
-- **Jeda:** Esc / P / tombol ⏸️
+- **Jeda:** Esc / P / tombol jeda di kanan atas
+- **Misi:** tombol gulungan (scroll) di kanan atas — 3 misi baru setiap hari, klaim hadiah koinnya
 
-Alur: cangkul petak tanah → tanam benih → siram → tidur di pintu rumah → panen → jual di **Peti Pengiriman** di samping rumah → beli benih & pupuk di **stand TOKO**. Jangan lupa memerah sapi dan memungut telur ayam di kandang. Hari berjalan pukul 06:00–22:00, ada cuaca hujan (tanaman tersiram otomatis), energi terbatas, dan progres **tersimpan otomatis** di browser. Target: kumpulkan 1.000 koin dari hasil penjualan.
+Alur: cangkul petak tanah → tanam benih → siram → tidur di pintu rumah → panen → jual di **Peti Pengiriman** di samping rumah → beli benih & pupuk di **stand TOKO**. Jangan lupa memerah sapi dan memungut telur ayam di kandang. Hari berjalan pukul 06:00–22:00, ada cuaca hujan (tanaman tersiram otomatis), energi terbatas, dan progres **tersimpan otomatis** di browser. Target: kumpulkan 1.000 koin dari hasil penjualan. Selesaikan juga **misi harian** untuk koin tambahan.
 
 ## Struktur project
 
@@ -50,6 +51,7 @@ yuki-valley/
 ├── index.html          # kerangka halaman & semua elemen UI
 ├── css/style.css       # tampilan fullscreen, HUD, hotbar, panel
 ├── assets/             # sprite PNG (Sprout Lands)
+├── sounds/             # efek suara OGG (Kenney, CC0)
 ├── server.mjs          # server statis mini (Node, tanpa dependensi)
 ├── tests/logic.test.mjs# tes logika otomatis (npm test)
 └── src/
@@ -60,18 +62,20 @@ yuki-valley/
     ├── farming.js      # pertumbuhan tanaman & pergantian hari
     ├── entities.js     # pemain & hewan (gerak, arah hadap)
     ├── render.js       # kamera, gambar dunia, partikel, cuaca, cahaya
-    ├── audio.js        # efek suara & musik prosedural (WebAudio)
+    ├── audio.js        # efek suara file (sounds/) + musik WebAudio
+    ├── icons.js        # ikon Lucide (SVG tersemat)
+    ├── quests.js       # misi harian: buat, progres, klaim hadiah
     ├── input.js        # keyboard + sentuh
-    ├── ui.js           # HUD, hotbar, toko, menu, toast
-    └── game.js         # orkestrasi: loop, aksi, ekonomi, tidur
+    ├── ui.js           # HUD, hotbar, toko, misi, menu, toast
+    └── game.js         # orkestrasi: loop, aksi, ekonomi, misi, tidur
 ```
 
 ## Tes
 
 ```bash
-npm test   # 20 pemeriksaan logika: peta/tabtrakan, siklus tanam, hujan, telur, interaksi
+npm test   # pemeriksaan logika: peta/tabtrakan, siklus tanam, hujan, telur, interaksi, misi
 ```
 
 ## Kredit
 
-Asset pixel: **Sprout Lands — Asset Pack** oleh Cup Nooble (itch.io), paket basic gratis, lisensi non-komersial dengan kredit. Game ini adalah demo non-komersial.
+Asset pixel: **Sprout Lands — Asset Pack** oleh Cup Nooble (itch.io), paket basic gratis, lisensi non-komersial dengan kredit. Ikon: **Lucide** (lisensi ISC). Efek suara: **Kenney** (kenney.nl) — paket Interface Sounds, RPG Audio, Music Jingles, lisensi **CC0** (lihat `sounds/CREDITS.txt`). Game ini adalah demo non-komersial.

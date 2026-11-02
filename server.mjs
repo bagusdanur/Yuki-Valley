@@ -16,6 +16,7 @@ const MIME = {
   '.js': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.png': 'image/png',
+  '.ogg': 'audio/ogg',
   '.json': 'application/json',
   '.md': 'text/markdown; charset=utf-8'
 };
@@ -57,5 +58,5 @@ createServer(async (req, res) => {
     res.end('404 - tidak ditemukan');
   }
 }).listen(PORT, () => {
-  console.log(`🌾 Yuki Valley berjalan di http://localhost:${PORT}` + (DEV ? '  (mode DEV: live reload aktif — edit file, browser refresh sendiri)' : ''));
+  console.log(`Yuki Valley berjalan di http://localhost:${PORT}` + (DEV ? '  (mode DEV: live reload aktif — edit file, browser refresh sendiri)' : ''));
 });

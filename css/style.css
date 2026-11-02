@@ -1,4 +1,4 @@
-/* Kebun Kecil — tampilan fullscreen landscape */
+/* Yuki Valley — tampilan portrait-first, ikon Lucide, tanpa emoji */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { width: 100%; height: 100%; overflow: hidden; background: #1d301e; }
 body { font-family: 'Segoe UI', system-ui, sans-serif; color: #fff; user-select: none; }
@@ -7,49 +7,59 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; color: #fff; user-select:
 canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: pixelated; background: #79b657; touch-action: none; }
 
 .hidden { display: none !important; }
+svg.luc { display: inline-block; vertical-align: -3px; flex: none; }
+.ic { display: inline-flex; align-items: center; justify-content: center; }
+.chip .ic svg, .panel-head .ic svg { width: 16px; height: 16px; }
 
 /* ===== HUD ===== */
 #hud { position: absolute; top: calc(6px + env(safe-area-inset-top)); left: 8px; right: 8px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; pointer-events: none; z-index: 5; }
 #hud .spacer { flex: 1; }
-.chip { background: rgba(43,32,20,.85); border: 2px solid #d9b26a; border-radius: 10px; padding: 4px 10px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-.chip .bar { width: 74px; height: 10px; background: #3a2c1c; border-radius: 6px; overflow: hidden; border: 1px solid #d9b26a; }
+.chip { background: rgba(43,32,20,.85); border: 2px solid #d9b26a; border-radius: 10px; padding: 4px 9px; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+.chip .bar { width: 64px; height: 10px; background: #3a2c1c; border-radius: 6px; overflow: hidden; border: 1px solid #d9b26a; }
 #hEnergy { height: 100%; width: 100%; background: linear-gradient(90deg, #ffd94d, #ffb03a); transition: width .25s; }
-.icon-btn { pointer-events: auto; background: rgba(43,32,20,.85); border: 2px solid #d9b26a; border-radius: 10px; color: #fff; font-size: 16px; width: 38px; height: 34px; cursor: pointer; }
+#hBag { display: inline-flex; gap: 7px; align-items: center; }
+.bag-it { display: inline-flex; align-items: center; gap: 1px; }
+.icon-btn { pointer-events: auto; position: relative; background: rgba(43,32,20,.85); border: 2px solid #d9b26a; border-radius: 10px; color: #fff; width: 38px; height: 34px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.badge { position: absolute; top: -7px; right: -7px; background: #e0483e; color: #fff; border: 2px solid #fff; border-radius: 999px; min-width: 20px; height: 20px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; padding: 0 4px; }
 
 /* ===== Hotbar ===== */
 #hotbar { position: absolute; left: 50%; bottom: calc(8px + env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; }
-.slot { width: 62px; padding: 6px 2px 4px; background: rgba(43,32,20,.85); border: 3px solid #3d2b1f; border-radius: 12px; color: #fff; cursor: pointer; text-align: center; font-size: 19px; line-height: 1.1; }
-.slot small { display: block; font-size: 10px; font-weight: 700; opacity: .9; }
+.slot { width: 62px; padding: 6px 2px 4px; background: rgba(43,32,20,.85); border: 3px solid #3d2b1f; border-radius: 12px; color: #fff; cursor: pointer; text-align: center; line-height: 1.1; }
+.slot small { display: block; font-size: 10px; font-weight: 700; opacity: .9; margin-top: 2px; }
 .slot .cnt { font-size: 11px; color: #ffd94d; font-weight: 800; }
 .slot.active { border-color: #ffd94d; background: rgba(122,90,56,.92); box-shadow: 0 0 0 2px #ffd94d inset; }
-.slot:disabled { opacity: .45; cursor: default; }
 
 /* ===== Kontrol sentuh ===== */
 #dpad { position: absolute; left: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(3, 50px); gap: 4px; z-index: 6; opacity: .92; }
-#dpad button { background: rgba(43,32,20,.72); border: 2px solid #d9b26a; border-radius: 12px; color: #fff; font-size: 18px; cursor: pointer; touch-action: none; }
-#btnAct { position: absolute; right: 12px; bottom: calc(22px + env(safe-area-inset-bottom)); width: 78px; height: 78px; border-radius: 50%; border: 3px solid #ffd94d; background: rgba(122,90,56,.88); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; z-index: 6; touch-action: none; }
+#dpad button { background: rgba(43,32,20,.72); border: 2px solid #d9b26a; border-radius: 12px; color: #fff; cursor: pointer; touch-action: none; display: flex; align-items: center; justify-content: center; }
+#btnAct { position: absolute; right: 12px; bottom: calc(22px + env(safe-area-inset-bottom)); width: 78px; height: 78px; border-radius: 50%; border: 3px solid #ffd94d; background: rgba(122,90,56,.88); color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; z-index: 6; touch-action: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
 @media (hover:hover) and (pointer:fine) { #dpad, #btnAct { opacity: .5; } }
 
 /* ===== Toast & fade ===== */
-#toast { position: absolute; left: 50%; bottom: 92px; transform: translateX(-50%); background: rgba(43,32,20,.92); border: 2px solid #d9b26a; color: #ffe9b0; border-radius: 12px; padding: 7px 16px; font-size: 15px; font-weight: 600; opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap; max-width: 92%; overflow: hidden; text-overflow: ellipsis; z-index: 8; }
+#toast { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%); background: rgba(43,32,20,.92); border: 2px solid #d9b26a; color: #ffe9b0; border-radius: 12px; padding: 7px 14px; font-size: 14.5px; font-weight: 600; opacity: 0; transition: opacity .25s; pointer-events: none; max-width: 92%; z-index: 8; display: flex; align-items: center; gap: 8px; }
+#toast .t-ic { display: inline-flex; color: #ffd94d; }
 #fade { position: absolute; inset: 0; background: #10131f; opacity: 0; pointer-events: none; transition: opacity .8s; display: flex; align-items: center; justify-content: center; z-index: 20; }
-#fadeText { font-size: clamp(22px, 4.5vw, 34px); font-weight: 700; color: #ffe9b0; text-align: center; padding: 0 16px; }
+#fadeText { font-size: clamp(22px, 6vw, 34px); font-weight: 700; color: #ffe9b0; text-align: center; padding: 0 16px; }
 
-/* ===== Panel (toko & jeda) ===== */
+/* ===== Panel (toko, misi, jeda) ===== */
 .panel { position: absolute; inset: 0; background: rgba(10,16,10,.55); display: flex; align-items: center; justify-content: center; z-index: 15; }
 .panel-box { background: #3b2a1a; border: 3px solid #d9b26a; border-radius: 16px; padding: 16px 18px; width: min(92vw, 430px); max-height: 88vh; overflow: auto; box-shadow: 0 12px 40px rgba(0,0,0,.5); }
 .panel-box.center { text-align: center; }
 .panel-head { font-size: 19px; font-weight: 800; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-.panel-head .x { background: none; border: none; color: #fff; font-size: 16px; cursor: pointer; }
+.panel-head .ph-t { display: inline-flex; align-items: center; gap: 8px; }
+.panel-head .x { background: none; border: none; color: #fff; cursor: pointer; display: inline-flex; padding: 4px; }
 .panel-note { font-size: 12.5px; line-height: 1.5; opacity: .9; margin-top: 12px; }
-.shop-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.07); border-radius: 10px; padding: 8px 10px; margin-bottom: 8px; }
-.shop-row .ic { font-size: 24px; }
-.shop-row .inf { flex: 1; }
-.shop-row .inf b { font-size: 14.5px; }
-.shop-row .inf small { display: block; opacity: .85; font-size: 12px; }
-.shop-row button { background: #38618c; border: 2px solid #223c5c; color: #fff; border-radius: 9px; padding: 7px 12px; font-weight: 700; cursor: pointer; }
-.shop-row button:disabled { opacity: .45; cursor: default; }
-.menu-btn { display: block; width: 100%; margin: 7px 0; background: #5b4232; border: 3px solid #2e2015; border-radius: 12px; color: #fff; padding: 11px 14px; font-size: 15.5px; font-weight: 700; cursor: pointer; text-align: center; }
+.shop-row, .quest-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.07); border-radius: 10px; padding: 8px 10px; margin-bottom: 8px; }
+.shop-row .ic, .quest-row .ic { color: #ffd94d; }
+.shop-row .inf, .quest-row .inf { flex: 1; }
+.shop-row .inf b, .quest-row .inf b { font-size: 14.5px; }
+.shop-row .inf small, .quest-row .inf small { display: block; opacity: .85; font-size: 12px; margin-top: 2px; }
+.shop-row button, .quest-row button { background: #38618c; border: 2px solid #223c5c; color: #fff; border-radius: 9px; padding: 7px 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-size: 13.5px; }
+.shop-row button:disabled, .quest-row button:disabled { opacity: .45; cursor: default; }
+.quest-row.done { outline: 2px solid #7ec850; }
+.qbar { height: 8px; background: #2a1d10; border-radius: 5px; overflow: hidden; margin-top: 5px; border: 1px solid rgba(217,178,106,.5); }
+.qbar > div { height: 100%; background: linear-gradient(90deg, #7ec850, #b5e048); transition: width .3s; }
+.menu-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin: 7px 0; background: #5b4232; border: 3px solid #2e2015; border-radius: 12px; color: #fff; padding: 11px 14px; font-size: 15.5px; font-weight: 700; cursor: pointer; text-align: center; }
 .menu-btn:hover { background: #6f5138; }
 .menu-btn.big { font-size: 18px; padding: 14px; background: #4d7c3a; border-color: #2e4d22; }
 .menu-btn.big:hover { background: #5c8f46; }
@@ -58,7 +68,25 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 /* ===== Layar awal ===== */
 #startScreen { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(24,42,20,.55), rgba(24,42,20,.78)); display: flex; align-items: center; justify-content: center; z-index: 30; padding: 12px; }
 .start-box { width: min(94vw, 520px); text-align: center; max-height: 96vh; overflow: auto; }
-.logo { font-size: clamp(34px, 7vw, 54px); font-weight: 900; text-shadow: 0 4px 0 rgba(0,0,0,.4); }
-.tagline { font-size: clamp(14px, 2.6vw, 18px); color: #ffe9b0; margin: 2px 0 18px; font-weight: 600; }
-.howto { text-align: left; background: rgba(30,22,12,.75); border: 2px solid #d9b26a; border-radius: 12px; padding: 11px 14px; font-size: 13.5px; line-height: 1.6; margin-top: 14px; }
-.credit { margin-top: 10px; font-size: 11.5px; color: #cfdfc2; }
+.logo { font-size: clamp(32px, 9vw, 54px); font-weight: 900; text-shadow: 0 4px 0 rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; gap: 10px; color: #fff; }
+.logo .ic { color: #ffd94d; }
+.tagline { font-size: clamp(13px, 3.6vw, 18px); color: #ffe9b0; margin: 2px 0 18px; font-weight: 600; }
+.steps { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; text-align: left; }
+.step { display: flex; align-items: center; gap: 11px; background: rgba(30,22,12,.75); border: 2px solid #d9b26a; border-radius: 12px; padding: 9px 13px; }
+.step-n { width: 30px; height: 30px; border-radius: 50%; background: #4d7c3a; border: 2px solid #d9b26a; font-weight: 900; display: flex; align-items: center; justify-content: center; flex: none; }
+.step-t b { display: block; font-size: 14.5px; }
+.step-t small { opacity: .85; font-size: 12.5px; }
+.howto { text-align: left; background: rgba(30,22,12,.75); border: 2px solid #d9b26a; border-radius: 12px; padding: 11px 14px; font-size: 13.5px; line-height: 1.65; margin-top: 12px; }
+.howto .ic svg { width: 14px; height: 14px; vertical-align: -2px; color: #ffd94d; }
+.credit { margin-top: 10px; font-size: 11.5px; color: #cfdfc2; line-height: 1.5; }
+@media (min-width: 620px) { .steps { flex-direction: row; } .step { flex: 1; } }
+
+/* ===== Mode portrait: hotbar di atas kontrol sentuh ===== */
+@media (orientation: portrait) {
+  #hotbar { left: 8px; right: 8px; transform: none; bottom: calc(178px + env(safe-area-inset-bottom)); }
+  .slot { flex: 1 1 0; width: auto; min-width: 0; padding: 5px 1px 4px; }
+  .slot small { font-size: 9px; }
+  #toast { bottom: calc(256px + env(safe-area-inset-bottom)); font-size: 13.5px; }
+  .chip { font-size: 12.5px; padding: 4px 7px; }
+  .chip .bar { width: 52px; }
+}

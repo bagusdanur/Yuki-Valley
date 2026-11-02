@@ -18,6 +18,8 @@ export function createState() {
     field: {},                  // "x,y" -> {tilled, crop, grow, watered}
     eggs: [],                   // [{tx, ty}] telur di tanah kandang
     cowMilked: false,
+    quests: [],                 // misi harian aktif (dari quests.js)
+    questDay: 0,                // hari terakhir daftar misi dibuat
     tool: 'hoe',
     stats: { harvested: 0, soldItems: 0, earnedTotal: 0 }
   };

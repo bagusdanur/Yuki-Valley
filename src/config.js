@@ -31,11 +31,10 @@ export const DECOR = [
 ];
 
 export const CROPS = {
-  jagung: { name: 'Jagung', emoji: '🌽', seedPrice: 20, sellPrice: 55, days: 3, row: 0, stages: [0, 1, 2, 3] },
-  bit:    { name: 'Bit',    emoji: '🍠', seedPrice: 10, sellPrice: 28, days: 2, row: 1, stages: [0, 2, 3, 3] }
+  jagung: { name: 'Jagung', seedPrice: 20, sellPrice: 55, days: 3, row: 0, stages: [0, 1, 2, 3] },
+  bit:    { name: 'Bit',    seedPrice: 10, sellPrice: 28, days: 2, row: 1, stages: [0, 2, 3, 3] }
 };
 export const PRICES = { egg: 15, milk: 40, fertilizer: 15 };
-export const BAG_EMOJI = { jagung: '🌽', bit: '🍠', egg: '🥚', milk: '🥛' };
 
 export const START = { coins: 80, energy: 100, seeds: { jagung: 3, bit: 3 }, fertilizer: 1 };
 export const ENERGY_COSTS = { hoe: 3, plant: 2, water: 2, fertilize: 1, harvest: 1, milk: 3, egg: 0 };
