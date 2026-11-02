@@ -86,10 +86,14 @@ svg.luc { display: inline-block; vertical-align: -3px; flex: none; }
 
 /* ===== Mode portrait: hotbar di atas kontrol sentuh ===== */
 @media (orientation: portrait) {
-  #hotbar { left: 8px; right: 8px; transform: none; bottom: calc(162px + env(safe-area-inset-bottom)); }
+  /* Kelompok kontrol diangkat jauh dari tepi bawah (di atas area gestur HP)
+     supaya jempol tidak perlu menekuk ke paling bawah layar. */
+  #dpad { bottom: calc(88px + env(safe-area-inset-bottom)); }
+  #btnAct { bottom: calc(104px + env(safe-area-inset-bottom)); }
+  #hotbar { left: 8px; right: 8px; transform: none; bottom: calc(240px + env(safe-area-inset-bottom)); }
   .slot { flex: 1 1 0; width: auto; min-width: 0; padding: 5px 1px 3px; }
   .slot small { font-size: 9px; }
-  #toast { bottom: calc(230px + env(safe-area-inset-bottom)); font-size: 13.5px; }
+  #toast { bottom: calc(310px + env(safe-area-inset-bottom)); font-size: 13.5px; }
   .chip { font-size: 12.5px; padding: 4px 7px; }
   .chip .bar { width: 52px; }
 }
