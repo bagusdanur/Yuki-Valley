@@ -32,7 +32,7 @@ export class UI {
     for (const t of TOOLS) {
       const b = document.createElement('button');
       b.className = 'slot'; b.dataset.tool = t.id;
-      b.innerHTML = `${icon(t.icon, 21)}<small>${t.label}</small><span class="cnt"></span>`;
+      b.innerHTML = `${icon(t.icon, 19)}<small>${t.label}</small><span class="cnt"></span>`;
       b.addEventListener('click', () => cb.onTool(t.id));
       hb.appendChild(b);
       this.slotEls[t.id] = b;
@@ -49,18 +49,35 @@ export class UI {
     $('pmResume').addEventListener('click', () => cb.onPause());
     $('pmSave').addEventListener('click', () => cb.onSave());
     $('pmSound').addEventListener('click', () => cb.onSound());
-    $('pmRestart').addEventListener('click', () => cb.onRestart());
-    // layar awal
-    $('btnPlay').addEventListener('click', () => cb.onNewGame());
-    $('btnContinue').addEventListener('click', () => cb.onContinue());
+    $('pmMenu').addEventListener('click', () => cb.onMenu());
+    // menu utama: Main, Pengaturan, Kredit
+    $('btnPlay').addEventListener('click', () => cb.onPlay());
+    $('btnSettings').addEventListener('click', () => this.openSettings());
+    $('btnCredit').addEventListener('click', () => this.openCredit());
+    $('setClose').addEventListener('click', () => this.closeSettings());
+    $('credClose').addEventListener('click', () => this.closeCredit());
+    $('setSound').addEventListener('click', () => cb.onSound());
+    $('setFull').addEventListener('click', () => cb.onFullscreen());
+    $('setRestart').addEventListener('click', () => cb.onRestart());
+    this.setSoundLabel(false);
   }
-  showStart(hasSave) { $('btnContinue').classList.toggle('hidden', !hasSave); }
+  showStart(hasSave) {
+    $('menuHint').textContent = hasSave ? 'Ada simpanan — tombol Main melanjutkan ladangmu.' : '';
+  }
   hideStart() { $('startScreen').classList.add('hidden'); }
+  showStartScreen() { $('startScreen').classList.remove('hidden'); }
   showGameUI() { $('hud').classList.remove('hidden'); $('hotbar').classList.remove('hidden'); $('touch').classList.remove('hidden'); }
+  hideGameUI() { $('hud').classList.add('hidden'); $('hotbar').classList.add('hidden'); $('touch').classList.add('hidden'); }
+  openSettings() { $('settingsPanel').classList.remove('hidden'); }
+  closeSettings() { $('settingsPanel').classList.add('hidden'); }
+  openCredit() { $('creditPanel').classList.remove('hidden'); }
+  closeCredit() { $('creditPanel').classList.add('hidden'); }
   setPaused(v) { this.paused = v; $('pauseMenu').classList.toggle('hidden', !v); }
   setSoundLabel(muted) {
     $('btnSound').innerHTML = icon(muted ? 'volume-x' : 'volume-2', 18);
-    $('pmSound').innerHTML = icon(muted ? 'volume-x' : 'volume-2', 17) + `<span>Suara: ${muted ? 'Mati' : 'Nyala'}</span>`;
+    const label = icon(muted ? 'volume-x' : 'volume-2', 17) + `<span>Suara: ${muted ? 'Mati' : 'Nyala'}</span>`;
+    $('pmSound').innerHTML = label;
+    $('setSound').innerHTML = label;
   }
   toast(msg, iconName = 'info', ms = 2400) {
     const el = $('toast');

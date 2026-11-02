@@ -1,6 +1,8 @@
-// audio.js — efek suara dari file asli (Kenney CC0, folder sounds/) + musik WebAudio.
-// Bila file suara belum ada/gagal dimuat, otomatis jatuh ke bunyi synth cadangan
-// supaya game tidak pernah error hanya karena audio.
+// audio.js — efek suara asli (Kenney CC0) tertanam di sounds-data.js + musik WebAudio.
+// Data tertanam selalu tersedia; file sounds/ hanya cadangan, dan bunyi synth
+// adalah jaring pengaman terakhir supaya game tidak pernah error karena audio.
+import { SFX_DATA } from './sounds-data.js';
+
 const FILES = {
   click: 'sounds/click.ogg', select: 'sounds/select.ogg', error: 'sounds/error.ogg',
   hoe: 'sounds/hoe.ogg', plant: 'sounds/plant.ogg', water: 'sounds/water.ogg',
@@ -25,10 +27,10 @@ export class AudioMan {
     this._musicTimer = null;
     this._note = 0;
     this._els = {};
-    for (const [name, src] of Object.entries(FILES)) {
+    for (const name of Object.keys(FILES)) {
       const a = new Audio();
       a.preload = 'auto';
-      a.src = src;
+      a.src = SFX_DATA[name] || FILES[name];
       a.addEventListener('error', () => { a.dataset.bad = '1'; });
       this._els[name] = a;
     }

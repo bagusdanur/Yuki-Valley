@@ -31,11 +31,11 @@
   <!-- Kontrol sentuh -->
   <div id="touch" class="hidden">
     <div id="dpad">
-      <span></span><button data-dir="up"><svg class="luc" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg></button><span></span>
-      <button data-dir="left"><svg class="luc" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button><span></span><button data-dir="right"><svg class="luc" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-      <span></span><button data-dir="down"><svg class="luc" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><span></span>
+      <span></span><button data-dir="up"><svg class="luc" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg></button><span></span>
+      <button data-dir="left"><svg class="luc" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button><span></span><button data-dir="right"><svg class="luc" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <span></span><button data-dir="down"><svg class="luc" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><span></span>
     </div>
-    <button id="btnAct"><span data-ic="hand" data-sz="24"></span><span>AKSI</span></button>
+    <button id="btnAct"><span data-ic="hand" data-sz="20"></span><span>AKSI</span></button>
   </div>
 
   <div id="toast"></div>
@@ -66,29 +66,48 @@
       <button class="menu-btn" id="pmResume"><span class="ic" data-ic="play"></span><span>Lanjutkan</span></button>
       <button class="menu-btn" id="pmSave"><span class="ic" data-ic="save"></span><span>Simpan Permainan</span></button>
       <button class="menu-btn" id="pmSound"></button>
-      <button class="menu-btn danger" id="pmRestart"><span class="ic" data-ic="trash-2"></span><span>Game Baru (hapus simpanan)</span></button>
+      <button class="menu-btn" id="pmMenu"><span class="ic" data-ic="home"></span><span>Menu Utama</span></button>
     </div>
   </div>
 
-  <!-- Layar awal -->
+  <!-- Panel pengaturan -->
+  <div id="settingsPanel" class="panel hidden">
+    <div class="panel-box center">
+      <div class="panel-head"><span class="ph-t"><span class="ic" data-ic="settings"></span>Pengaturan</span><button class="x" id="setClose"><span data-ic="x"></span></button></div>
+      <button class="menu-btn" id="setSound"></button>
+      <button class="menu-btn" id="setFull"><span class="ic" data-ic="maximize"></span><span>Layar Penuh</span></button>
+      <div class="howto mini">
+        <b>Cara main:</b> Jalan dengan WASD / panah / D-pad, hadapkan karakter ke target, tekan Spasi / E / AKSI.
+        Cangkul tanah cokelat, tanam, siram, tidur di pintu rumah, panen, lalu jual di peti kayu.
+        Beli benih & pupuk di stand Toko. Target: 1.000 koin dari hasil jualan.
+      </div>
+      <button class="menu-btn danger" id="setRestart"><span class="ic" data-ic="trash-2"></span><span>Mulai Ulang (hapus simpanan)</span></button>
+    </div>
+  </div>
+
+  <!-- Panel kredit -->
+  <div id="creditPanel" class="panel hidden">
+    <div class="panel-box center">
+      <div class="panel-head"><span class="ph-t"><span class="ic" data-ic="info"></span>Kredit</span><button class="x" id="credClose"><span data-ic="x"></span></button></div>
+      <p class="cred-line"><b>Yuki Valley — Mini Harvest</b></p>
+      <p class="cred-line">Grafik pixel: “Sprout Lands” oleh <b>Cup Nooble</b> (itch.io, paket basic gratis, non-komersial)</p>
+      <p class="cred-line">Ikon: <b>Lucide</b> (lisensi ISC)</p>
+      <p class="cred-line">Efek suara: <b>Kenney</b> — kenney.nl (lisensi CC0)</p>
+      <p class="cred-line">Dibuat dengan JavaScript murni (ES Modules), tanpa engine.</p>
+    </div>
+  </div>
+
+  <!-- Menu utama -->
   <div id="startScreen">
     <div class="start-box">
       <div class="logo"><span class="ic" data-ic="wheat" data-sz="44"></span> Yuki Valley</div>
-      <div class="tagline">Game farming pixel ala Harvest Town — mode portrait</div>
-      <button class="menu-btn big hidden" id="btnContinue"><span class="ic" data-ic="play"></span><span>Lanjutkan Permainan</span></button>
-      <button class="menu-btn big" id="btnPlay"><span class="ic" data-ic="sprout"></span><span>Game Baru</span></button>
-      <div class="steps">
-        <div class="step"><div class="step-n">1</div><div class="step-t"><b>Bertani</b><small>Cangkul, tanam, siram</small></div></div>
-        <div class="step"><div class="step-n">2</div><div class="step-t"><b>Panen & jual</b><small>Panen, lalu jual di peti kayu</small></div></div>
-        <div class="step"><div class="step-n">3</div><div class="step-t"><b>Selesaikan misi</b><small>Klaim hadiah koin tiap hari</small></div></div>
+      <div class="tagline">Game farming pixel ala Harvest Town</div>
+      <div class="main-menu">
+        <button class="menu-btn big" id="btnPlay"><span class="ic" data-ic="play"></span><span>Main</span></button>
+        <button class="menu-btn" id="btnSettings"><span class="ic" data-ic="settings"></span><span>Pengaturan</span></button>
+        <button class="menu-btn" id="btnCredit"><span class="ic" data-ic="info"></span><span>Kredit</span></button>
       </div>
-      <div class="howto">
-        <b>Cara main:</b> Jalan dengan WASD / panah / D-pad. Hadapkan karakter ke target, tekan <b>Spasi / E / AKSI</b>.<br>
-        <span class="ic" data-ic="shovel" data-sz="14"></span> Cangkul tanah cokelat, <span class="ic" data-ic="sprout" data-sz="14"></span> tanam benih, <span class="ic" data-ic="droplets" data-sz="14"></span> siram, lalu <span class="ic" data-ic="moon" data-sz="14"></span> tidur di pintu rumah supaya tanaman tumbuh. <span class="ic" data-ic="hand" data-sz="14"></span> Panen yang matang dan jual di peti kayu.<br>
-        Kunjungi stand <span class="ic" data-ic="store" data-sz="14"></span> <b>toko</b> untuk beli benih & pupuk, perah sapi dan pungut telur ayam di kandang. Buka <span class="ic" data-ic="scroll-text" data-sz="14"></span> <b>Misi</b> dari tombol di atas untuk hadiah koin harian.<br>
-        Hari berjalan 06:00–22:00. Jaga energimu. Target utama: kumpulkan <b>1.000 koin</b> dari hasil jualan!
-      </div>
-      <div class="credit">Grafik: “Sprout Lands” oleh Cup Nooble (itch.io, paket basic gratis, non-komersial) • Ikon: Lucide (ISC) • Suara: Kenney (CC0)</div>
+      <div class="credit" id="menuHint"></div>
     </div>
   </div>
 </div>

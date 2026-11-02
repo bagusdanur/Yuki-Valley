@@ -14,7 +14,7 @@ svg.luc { display: inline-block; vertical-align: -3px; flex: none; }
 /* ===== HUD ===== */
 #hud { position: absolute; top: calc(6px + env(safe-area-inset-top)); left: 8px; right: 8px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; pointer-events: none; z-index: 5; }
 #hud .spacer { flex: 1; }
-.chip { background: rgba(43,32,20,.85); border: 2px solid #d9b26a; border-radius: 10px; padding: 4px 9px; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+.chip { background: rgba(43,32,20,.82); border: 2px solid #d9b26a; border-radius: 10px; padding: 4px 9px; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,.25); backdrop-filter: blur(3px); }
 .chip .bar { width: 64px; height: 10px; background: #3a2c1c; border-radius: 6px; overflow: hidden; border: 1px solid #d9b26a; }
 #hEnergy { height: 100%; width: 100%; background: linear-gradient(90deg, #ffd94d, #ffb03a); transition: width .25s; }
 #hBag { display: inline-flex; gap: 7px; align-items: center; }
@@ -24,15 +24,15 @@ svg.luc { display: inline-block; vertical-align: -3px; flex: none; }
 
 /* ===== Hotbar ===== */
 #hotbar { position: absolute; left: 50%; bottom: calc(8px + env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; }
-.slot { width: 62px; padding: 6px 2px 4px; background: rgba(43,32,20,.85); border: 3px solid #3d2b1f; border-radius: 12px; color: #fff; cursor: pointer; text-align: center; line-height: 1.1; }
+.slot { width: 58px; padding: 5px 2px 3px; background: rgba(43,32,20,.85); border: 2px solid #3d2b1f; border-radius: 11px; color: #fff; cursor: pointer; text-align: center; line-height: 1.1; box-shadow: 0 2px 8px rgba(0,0,0,.25); }
 .slot small { display: block; font-size: 10px; font-weight: 700; opacity: .9; margin-top: 2px; }
 .slot .cnt { font-size: 11px; color: #ffd94d; font-weight: 800; }
 .slot.active { border-color: #ffd94d; background: rgba(122,90,56,.92); box-shadow: 0 0 0 2px #ffd94d inset; }
 
 /* ===== Kontrol sentuh ===== */
-#dpad { position: absolute; left: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(3, 50px); gap: 4px; z-index: 6; opacity: .92; }
+#dpad { position: absolute; left: 10px; bottom: calc(12px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(3, 44px); gap: 3px; z-index: 6; opacity: .92; }
 #dpad button { background: rgba(43,32,20,.72); border: 2px solid #d9b26a; border-radius: 12px; color: #fff; cursor: pointer; touch-action: none; display: flex; align-items: center; justify-content: center; }
-#btnAct { position: absolute; right: 12px; bottom: calc(22px + env(safe-area-inset-bottom)); width: 78px; height: 78px; border-radius: 50%; border: 3px solid #ffd94d; background: rgba(122,90,56,.88); color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; z-index: 6; touch-action: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+#btnAct { position: absolute; right: 12px; bottom: calc(28px + env(safe-area-inset-bottom)); width: 64px; height: 64px; border-radius: 50%; border: 3px solid #ffd94d; background: rgba(122,90,56,.88); color: #fff; font-size: 12.5px; font-weight: 800; cursor: pointer; z-index: 6; touch-action: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; box-shadow: 0 3px 10px rgba(0,0,0,.3); }
 @media (hover:hover) and (pointer:fine) { #dpad, #btnAct { opacity: .5; } }
 
 /* ===== Toast & fade ===== */
@@ -79,14 +79,17 @@ svg.luc { display: inline-block; vertical-align: -3px; flex: none; }
 .howto { text-align: left; background: rgba(30,22,12,.75); border: 2px solid #d9b26a; border-radius: 12px; padding: 11px 14px; font-size: 13.5px; line-height: 1.65; margin-top: 12px; }
 .howto .ic svg { width: 14px; height: 14px; vertical-align: -2px; color: #ffd94d; }
 .credit { margin-top: 10px; font-size: 11.5px; color: #cfdfc2; line-height: 1.5; }
+.main-menu { display: flex; flex-direction: column; margin-top: 6px; }
+.howto.mini { font-size: 12.5px; line-height: 1.6; margin: 10px 0 4px; }
+.cred-line { font-size: 13.5px; line-height: 1.55; margin: 7px 0; opacity: .95; }
 @media (min-width: 620px) { .steps { flex-direction: row; } .step { flex: 1; } }
 
 /* ===== Mode portrait: hotbar di atas kontrol sentuh ===== */
 @media (orientation: portrait) {
-  #hotbar { left: 8px; right: 8px; transform: none; bottom: calc(178px + env(safe-area-inset-bottom)); }
-  .slot { flex: 1 1 0; width: auto; min-width: 0; padding: 5px 1px 4px; }
+  #hotbar { left: 8px; right: 8px; transform: none; bottom: calc(162px + env(safe-area-inset-bottom)); }
+  .slot { flex: 1 1 0; width: auto; min-width: 0; padding: 5px 1px 3px; }
   .slot small { font-size: 9px; }
-  #toast { bottom: calc(256px + env(safe-area-inset-bottom)); font-size: 13.5px; }
+  #toast { bottom: calc(230px + env(safe-area-inset-bottom)); font-size: 13.5px; }
   .chip { font-size: 12.5px; padding: 4px 7px; }
   .chip .bar { width: 52px; }
 }

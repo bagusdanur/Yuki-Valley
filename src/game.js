@@ -35,8 +35,8 @@ export class Game {
       onFullscreen: () => this.tryFullscreen(),
       onSave: () => { if (saveGame(this.state)) this.ui.toast('Permainan tersimpan', 'save'); },
       onRestart: () => this.restart(),
-      onNewGame: () => this.start('new'),
-      onContinue: () => this.start('continue'),
+      onPlay: () => this.play(),
+      onMenu: () => this.backToMenu(),
       onQuest: () => { this.audio.sfx('click'); this.ui.openQuests(this.state); },
       onClaim: id => this.claimQuest(id)
     });
@@ -73,6 +73,20 @@ export class Game {
     }
     this.ui.renderQuests(this.state);
     this.afterChange();
+  }
+
+  play() { this.start(hasSave() ? 'continue' : 'new'); }
+  backToMenu() {
+    saveGame(this.state);
+    this.started = false;
+    this.paused = false;
+    this.ui.setPaused(false);
+    this.ui.closeShop();
+    this.ui.closeQuests();
+    this.ui.hideGameUI();
+    this.audio.stopMusic();
+    this.ui.showStart(hasSave());
+    this.ui.showStartScreen();
   }
 
   start(mode) {
