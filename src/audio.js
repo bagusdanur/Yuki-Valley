@@ -27,6 +27,8 @@ export class AudioMan {
     this._musicTimer = null;
     this._note = 0;
     this._els = {};
+    this._pools = {};  // elemen audio dipakai bergantian (tidak clone tiap bunyi)
+    this._poolI = {};
     for (const name of Object.keys(FILES)) {
       const a = new Audio();
       a.preload = 'auto';
@@ -61,8 +63,13 @@ export class AudioMan {
     const el = this._els[name];
     if (el && !el.dataset.bad) {
       try {
-        const c = el.cloneNode();
+        // Pakai pool 3 elemen bergantian — cloneNode tiap bunyi memaksa browser
+        // memuat ulang data suara dan terasa berat/lag di HP.
+        let pool = this._pools[name];
+        if (!pool) { pool = this._pools[name] = [el, el.cloneNode(), el.cloneNode()]; this._poolI[name] = 0; }
+        const c = pool[this._poolI[name]++ % pool.length];
         c.volume = 0.9;
+        try { c.currentTime = 0; } catch { /* belum termuat penuh */ }
         const p = c.play();
         if (p && p.catch) p.catch(() => this._fallback(name));
         return;

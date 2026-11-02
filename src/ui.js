@@ -98,22 +98,39 @@ export class UI {
     return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
   }
   refresh(state) {
-    $('hDay').textContent = state.day;
-    $('hClock').textContent = this.clockText(state.timeMin);
+    // Hanya sentuh DOM bila nilainya berubah — refresh dipanggil berkala,
+    // dan menulis innerHTML terus-menerus bikin game terasa berat di HP.
+    const c = this._rc || (this._rc = {});
+    if (c.day !== state.day) { c.day = state.day; $('hDay').textContent = state.day; }
+    const clock = this.clockText(state.timeMin);
+    if (c.clock !== clock) { c.clock = clock; $('hClock').textContent = clock; }
     const rain = state.weather === 'hujan';
-    $('hWeather').innerHTML = icon(rain ? 'cloud-rain' : 'sun', 16) + `<span>${rain ? 'Hujan' : 'Cerah'}</span>`;
-    $('hCoin').textContent = state.coins;
-    $('hEnergy').style.width = Math.max(0, state.energy) + '%';
-    const parts = Object.keys(state.bag).filter(k => state.bag[k] > 0)
-      .map(k => `<span class="bag-it">${icon(BAG_ICONS[k], 14)}×${state.bag[k]}</span>`);
-    $('hBag').innerHTML = parts.length ? parts.join('') : 'kosong';
+    if (c.rain !== rain) {
+      c.rain = rain;
+      $('hWeather').innerHTML = icon(rain ? 'cloud-rain' : 'sun', 16) + `<span>${rain ? 'Hujan' : 'Cerah'}</span>`;
+    }
+    if (c.coins !== state.coins) { c.coins = state.coins; $('hCoin').textContent = state.coins; }
+    const en = Math.max(0, Math.round(state.energy));
+    if (c.energy !== en) { c.energy = en; $('hEnergy').style.width = en + '%'; }
+    const bagSig = Object.keys(state.bag).map(k => state.bag[k]).join(',');
+    if (c.bag !== bagSig) {
+      c.bag = bagSig;
+      const parts = Object.keys(state.bag).filter(k => state.bag[k] > 0)
+        .map(k => `<span class="bag-it">${icon(BAG_ICONS[k], 14)}×${state.bag[k]}</span>`);
+      $('hBag').innerHTML = parts.length ? parts.join('') : 'kosong';
+    }
     const claim = claimableCount(state);
-    $('questBadge').textContent = claim;
-    $('questBadge').classList.toggle('hidden', claim === 0);
+    if (c.claim !== claim) {
+      c.claim = claim;
+      $('questBadge').textContent = claim;
+      $('questBadge').classList.toggle('hidden', claim === 0);
+    }
     for (const t of TOOLS) {
       const el = this.slotEls[t.id];
-      el.classList.toggle('active', state.tool === t.id);
-      el.querySelector('.cnt').textContent = t.count ? '×' + t.count(state) : '';
+      const act = state.tool === t.id;
+      if (el._act !== act) { el._act = act; el.classList.toggle('active', act); }
+      const cnt = t.count ? '×' + t.count(state) : '';
+      if (el._cnt !== cnt) { el._cnt = cnt; el.querySelector('.cnt').textContent = cnt; }
     }
   }
   renderShop(state) {
