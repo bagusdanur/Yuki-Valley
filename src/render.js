@@ -52,6 +52,7 @@ export class Renderer {
     const presets = {
       dirt: ['#8a5a2b', '#a4713a', '#6e4525'], water: ['#6ec6ff', '#a8dcff', '#4aa3e0'],
       harvest: ['#ffd94d', '#9be15d', '#fff3a0'], coin: ['#ffd94d', '#ffb03a'],
+      heart: ['#ff8fab', '#ff5d7e', '#ffc2d1'],
       leaf: ['#7ec850', '#5da23e'], splash: ['#bfe8ff', '#8fd0ff']
     };
     const colors = presets[kind] || presets.leaf;
@@ -64,7 +65,7 @@ export class Renderer {
       });
     }
   }
-  draw(state, player, animals, front, now, dt) {
+  draw(state, player, animals, front, now, dt, npc) {
     const { ctx, vw, vh } = this;
     // kamera mengikuti pemain, dibatasi tepi dunia
     const tx = player.x + TS / 2 - vw / 2, ty = player.y + TS / 2 - vh / 2;
@@ -137,6 +138,7 @@ export class Renderer {
       if (st >= 2) draws.push({ y: (ty2 + 1) * TS, fn }); else fn();
     }
     for (const a of animals) draws.push({ y: a.y + TS, fn: () => this.drawAnimal(a, now) });
+    if (npc) draws.push({ y: npc.y + TS, fn: () => this.drawNpc(npc) });
     draws.push({ y: player.y + TS, fn: () => this.drawPlayer(player) });
     draws.sort((p, q) => p.y - q.y).forEach(d => d.fn());
 
@@ -196,6 +198,22 @@ export class Renderer {
   drawPlayer(p) {
     const row = DIRROW[p.dir], f = p.moving ? p.frame : 0;
     this.ctx.drawImage(this.img.char, f * 16, row * 16, 16, 16, p.x + 4, p.y - 6, 40, 40);
+  }
+  drawNpc(n) {
+    const img = this.img.yuki;
+    if (!img || !img.naturalWidth) return; // file sprite belum ada — lewati diam-diam
+    const row = DIRROW[n.dir], f = n.moving ? n.frame : 0;
+    this.ctx.drawImage(img, f * 16, row * 16, 16, 16, n.x + 4, n.y - 6, 40, 40);
+    // label nama di atas kepala
+    const { ctx } = this, cx = n.x + TS / 2;
+    ctx.font = 'bold 9px sans-serif';
+    const w = ctx.measureText('Yuki').width + 10;
+    ctx.fillStyle = 'rgba(43,32,20,.85)';
+    if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(cx - w / 2, n.y - 21, w, 13, 6); ctx.fill(); }
+    else ctx.fillRect(cx - w / 2, n.y - 21, w, 13);
+    ctx.fillStyle = '#ffe9b0'; ctx.textAlign = 'center';
+    ctx.fillText('Yuki', cx, n.y - 11);
+    ctx.textAlign = 'left';
   }
   drawAnimal(a, now) {
     const { ctx } = this, fr = Math.floor(now / 350) % 2;

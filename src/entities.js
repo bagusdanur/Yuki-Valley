@@ -1,5 +1,5 @@
 // entities.js — pemain & hewan (gerak + tabrakan)
-import { TS, WORLD_W, WORLD_H, PEN } from './config.js';
+import { TS, WORLD_W, WORLD_H, PEN, NPC_HOME } from './config.js';
 import { isSolid } from './world.js';
 
 export const DIRV = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] };
@@ -62,4 +62,42 @@ export function updateAnimals(list, dt) {
 }
 export function animalAtTile(list, tx, ty) {
   return list.find(a => Math.floor((a.x + TS / 2) / TS) === tx && Math.floor((a.y + TS / 2) / TS) === ty) || null;
+}
+
+// ===== NPC: Yuki =====
+// Berdiam di dekat rumah; sesekali berbalik arah atau melangkah 1-2 petak
+// di sekitar rumahnya. Tidak disimpan di simpanan — selalu mulai dari rumah.
+export function createNpc() {
+  return {
+    x: NPC_HOME.x * TS, y: NPC_HOME.y * TS, tx: NPC_HOME.x * TS, ty: NPC_HOME.y * TS,
+    dir: 'down', frame: 0, animT: 0, moving: false, wait: 1500, speed: 55
+  };
+}
+export function npcTile(n) {
+  return { tx: Math.floor((n.x + TS / 2) / TS), ty: Math.floor((n.y + TS / 2) / TS) };
+}
+export function updateNpc(n, dt) {
+  const dx = n.tx - n.x, dy = n.ty - n.y, dist = Math.hypot(dx, dy);
+  n.moving = dist > 3;
+  if (n.moving) {
+    const sp = n.speed * dt;
+    n.x += dx / dist * sp; n.y += dy / dist * sp;
+    n.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : (dy < 0 ? 'up' : 'down');
+    n.animT += dt;
+    if (n.animT > 0.14) { n.animT = 0; n.frame = (n.frame + 1) % 4; }
+  } else {
+    n.frame = 0;
+    n.wait -= dt * 1000;
+    if (n.wait <= 0) {
+      n.wait = 2200 + Math.random() * 3200;
+      if (Math.random() < 0.45) {
+        const dirs = ['down', 'left', 'right', 'up'];
+        n.dir = dirs[Math.floor(Math.random() * dirs.length)];
+      } else {
+        const nx = (NPC_HOME.x + Math.round((Math.random() - 0.5) * 4)) * TS;
+        const ny = (NPC_HOME.y + Math.round((Math.random() - 0.5) * 2)) * TS;
+        if (!isSolid(Math.floor(nx / TS), Math.floor(ny / TS))) { n.tx = nx; n.ty = ny; }
+      }
+    }
+  }
 }

@@ -6,7 +6,17 @@ import {
 import { createState, saveGame, loadGame, clearSave, hasSave } from './state.js';
 import { inRect, isField } from './world.js';
 import { cellAt, isRipe, startNewDay } from './farming.js';
-import { createPlayer, createAnimals, updatePlayer, updateAnimals, frontTile, animalAtTile } from './entities.js';
+import { createPlayer, createAnimals, updatePlayer, updateAnimals, frontTile, animalAtTile, createNpc, updateNpc, npcTile } from './entities.js';
+
+const NPC_LINES = [
+  'Haii~ Mau berkebun apa hari ini? Aku temenin yaa.',
+  'Jagungnya jangan lupa disiram. Nanti dia ngambek, kayak aku kalau dicuekin~',
+  'Kamu kerja keras banget sih... jadi makin sayang deh.',
+  'Bit merah itu favoritku! Panen yang banyak yaa.',
+  'Kalau capek, tidur aja di rumah. Besok aku masih di sini kok.',
+  'Sapinya lucu ya? Tapi kamu lebih lucu sih~',
+  'Target 1.000 koin, kita pasti bisa. Semangat yaa!'
+];
 import { generateQuests, applyProgress, claimReward } from './quests.js';
 import { Renderer } from './render.js';
 import { UI } from './ui.js';
@@ -22,6 +32,8 @@ export class Game {
     this.state = createState();
     this.player = createPlayer();
     this.animals = createAnimals();
+    this.npc = createNpc();
+    this._npcLine = 0;
     this.started = false;
     this.paused = false;
     this.sleeping = false;
@@ -95,6 +107,7 @@ export class Game {
     this.ensureQuests();
     this.player = createPlayer();
     this.animals = createAnimals();
+    this.npc = createNpc();
     this.started = true; this.paused = false;
     this.ui.hideStart(); this.ui.showGameUI(); this.ui.setPaused(false);
     this.tryFullscreen();
@@ -153,6 +166,8 @@ export class Game {
     if (tx === DOOR.x && ty === DOOR.y) return void this.sleep(false);
     if (inRect(tx, ty, SHOP)) { this.audio.sfx('pop'); this.ui.openShop(s); return; }
     if (tx === CHEST.x && ty === CHEST.y) return void this.sellAll();
+    const nt = npcTile(this.npc);
+    if (tx === nt.tx && ty === nt.ty) return void this.talkToNpc();
 
     const animal = animalAtTile(this.animals, tx, ty);
     if (animal && animal.kind === 'cow') {
@@ -224,6 +239,15 @@ export class Game {
     }
     this.afterChange();
   }
+  talkToNpc() {
+    const p = this.player, n = this.npc;
+    // Yuki berhenti melangkah dan menoleh ke pemain
+    n.tx = n.x; n.ty = n.y;
+    n.dir = Math.abs(p.x - n.x) > Math.abs(p.y - n.y) ? (p.x < n.x ? 'left' : 'right') : (p.y < n.y ? 'up' : 'down');
+    this.audio.sfx('pop');
+    this.renderer.spawn(n.x + TS / 2, n.y - 2, 'heart', 7);
+    this.ui.toast('Yuki: "' + NPC_LINES[this._npcLine++ % NPC_LINES.length] + '"', 'heart', 3600);
+  }
   afterChange() { saveGame(this.state); this.ui.refresh(this.state); }
 
   sellAll() {
@@ -289,15 +313,23 @@ export class Game {
     if (active) {
       this.state.timeMin += dt * (DAY_END_MIN - DAY_START_MIN) / DAY_REAL_SECONDS;
       if (this.state.timeMin >= DAY_END_MIN) { this.state.timeMin = DAY_END_MIN; void this.sleep(true); }
+      const ox = this.player.x, oy = this.player.y;
       updatePlayer(this.player, this.input.axis(), dt);
+      // pemain tidak bisa menembus Yuki
+      const n = this.npc;
+      if (this.player.x + 13 < n.x + TS - 13 && this.player.x + TS - 13 > n.x + 13 &&
+          this.player.y + TS - 16 < n.y + TS - 2 && this.player.y + TS - 2 > n.y + TS - 16) {
+        this.player.x = ox; this.player.y = oy;
+      }
       updateAnimals(this.animals, dt);
+      updateNpc(this.npc, dt);
       this._autosave += dt;
       if (this._autosave > 20) { this._autosave = 0; saveGame(this.state); }
     }
     this._hudT += dt;
     if (this._hudT > 0.15) { this._hudT = 0; if (this.started) this.ui.refresh(this.state); }
     const front = this.started ? frontTile(this.player) : null;
-    this.renderer.draw(this.state, this.player, this.animals, front, t, dt);
+    this.renderer.draw(this.state, this.player, this.animals, front, t, dt, this.npc);
     requestAnimationFrame(tt => this.loop(tt));
   }
 }

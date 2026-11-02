@@ -11,6 +11,7 @@ export const POND  = { x: 29, y: 2, w: 4, h: 3 };
 export const FIELD = { x: 3, y: 10, w: 12, h: 8 };         // 96 petak ladang
 export const PEN   = { x: 24, y: 13, w: 10, h: 7 };        // kandang hewan
 export const PEN_GATE = { x: 29, y: 19 };                  // celah pagar (baris bawah)
+export const NPC_HOME = { x: 7, y: 5 };                    // posisi Yuki (NPC) di dekat rumah
 
 // Jalur tanah (visual saja): dari rumah ke toko, ladang, dan kandang
 export const PATHS = [
@@ -56,5 +57,6 @@ export const ATLAS = {
 };
 export const ASSET_FILES = {
   char: 'assets/char.png', atlas: 'assets/atlas.png', plants: 'assets/plants.png',
-  items: 'assets/items.png', egg: 'assets/egg.png', milk: 'assets/milk.png'
+  items: 'assets/items.png', egg: 'assets/egg.png', milk: 'assets/milk.png',
+  yuki: 'assets/char-yuki.png'
 };
