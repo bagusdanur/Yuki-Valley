@@ -81,11 +81,19 @@ export class Renderer {
     const draws = [];
     draws.push({ y: (HOUSE.y + HOUSE.h) * TS, fn: () => this.drawHouse() });
     draws.push({ y: (SHOP.y + SHOP.h) * TS, fn: () => this.drawShop() });
-    draws.push({ y: (CHEST.y + 1) * TS, fn: () => this.ctx.drawImage(this.img.atlas, 96, 64, 32, 32, CHEST.x * TS + 4, CHEST.y * TS + 2, 40, 40) });
+    // Sprite peti sebenarnya hanya 16x20 di (112,76) pada atlas — menggambar
+    // kotak 32x32 dari (96,64) membuat peti tampil kecil & bergeser.
+    draws.push({ y: (CHEST.y + 1) * TS, fn: () => this.ctx.drawImage(this.img.atlas, 112, 76, 16, 20, CHEST.x * TS + 10, CHEST.y * TS + 6, 28, 35) });
     for (let y = PEN.y; y < PEN.y + PEN.h; y++) for (let x = PEN.x; x < PEN.x + PEN.w; x++) {
       if (!isPenFence(x, y)) continue;
       const cell = (x === PEN.x || x === PEN.x + PEN.w - 1) && hash(x, y) % 2 ? ATLAS.fencePost : ATLAS.fenceH;
-      draws.push({ y: (y + 1) * TS, fn: ((cx, cy, cl) => () => this.atlas(cl, cx * TS, cy * TS))(x, y, cell) });
+      if (cell === ATLAS.fencePost) {
+        // Tiang pagar sprite-nya cuma 6x11 di (85,65) — gambar rapat menapak
+        // tanah, bukan sel penuh 16x16 (tiang terlihat melayang/terpotong).
+        draws.push({ y: (y + 1) * TS, fn: ((cx, cy) => () => this.ctx.drawImage(this.img.atlas, 85, 65, 6, 11, cx * TS + 15, cy * TS + 15, 18, 33))(x, y) });
+      } else {
+        draws.push({ y: (y + 1) * TS, fn: ((cx, cy, cl) => () => this.atlas(cl, cx * TS, cy * TS))(x, y, cell) });
+      }
     }
     // dekorasi
     for (const d of DECOR) draws.push({ y: (d[2] + 1) * TS, fn: ((dd) => () => this.atlas(ATLAS[dd[0]], dd[1] * TS, dd[2] * TS))(d) });
@@ -175,9 +183,13 @@ export class Renderer {
       if (a.dir < 0) { ctx.translate(a.x + TS, 0); ctx.scale(-1, 1); ctx.drawImage(this.img.atlas, cell[0] * 16, cell[1] * 16, 16, 16, 0, a.y + 8, 36, 36); }
       else ctx.drawImage(this.img.atlas, cell[0] * 16, cell[1] * 16, 16, 16, a.x + 6, a.y + 8, 36, 36);
     } else {
-      const sx = fr === 0 ? 48 : 80;
-      if (a.dir < 0) { ctx.translate(a.x + TS + 8, 0); ctx.scale(-1, 1); ctx.drawImage(this.img.atlas, sx, 96, 32, 32, 0, a.y - 2, 56, 56); }
-      else ctx.drawImage(this.img.atlas, sx, 96, 32, 32, a.x - 4, a.y - 2, 56, 56);
+      // Frame sapi sebenarnya rapat 27x18 di (51,108) & (83,108); kotak longgar
+      // 32x32 dari (48/80,96) membuat sapi kecil, bergeser, dan "melompat"
+      // saat berbalik arah. Gambar rapat & cerminkan di titik tengah tubuh.
+      const sx = fr === 0 ? 51 : 83;
+      const dy = a.y + TS - 38;
+      if (a.dir < 0) { ctx.translate(a.x + TS / 2, 0); ctx.scale(-1, 1); ctx.drawImage(this.img.atlas, sx, 108, 27, 18, -27, dy, 54, 36); }
+      else ctx.drawImage(this.img.atlas, sx, 108, 27, 18, a.x + TS / 2 - 27, dy, 54, 36);
     }
     ctx.restore();
   }
