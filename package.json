@@ -1,0 +1,1 @@
+{"description":"Yuki Valley — game farming pixel ala Harvest Town (JavaScript modular, tanpa framework)","name":"yuki-valley","private":true,"scripts":{"start":"node server.mjs","dev":"node server.mjs --dev","test":"node tests/logic.test.mjs"},"type":"module","version":"2.0.0"}

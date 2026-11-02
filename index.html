@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Yuki Valley — Mini Harvest</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="game-container">
+  <canvas id="cv"></canvas>
+
+  <!-- HUD atas -->
+  <div id="hud" class="hidden">
+    <div class="chip">📅 Hari <b id="hDay">1</b></div>
+    <div class="chip">🕐 <b id="hClock">06:00</b></div>
+    <div class="chip" id="hWeather">☀️ Cerah</div>
+    <div class="chip">🪙 <b id="hCoin">0</b></div>
+    <div class="chip energy">⚡ <div class="bar"><div id="hEnergy"></div></div></div>
+    <div class="chip">🎒 <span id="hBag">kosong</span></div>
+    <div class="spacer"></div>
+    <button class="icon-btn" id="btnSound" title="Suara">🔊</button>
+    <button class="icon-btn" id="btnFull" title="Layar penuh">⛶</button>
+    <button class="icon-btn" id="btnPause" title="Jeda">⏸️</button>
+  </div>
+
+  <!-- Hotbar alat -->
+  <div id="hotbar" class="hidden"></div>
+
+  <!-- Kontrol sentuh -->
+  <div id="touch" class="hidden">
+    <div id="dpad">
+      <span></span><button data-dir="up">▲</button><span></span>
+      <button data-dir="left">◀</button><span></span><button data-dir="right">▶</button>
+      <span></span><button data-dir="down">▼</button><span></span>
+    </div>
+    <button id="btnAct">AKSI</button>
+  </div>
+
+  <div id="toast"></div>
+  <div id="fade"><div id="fadeText"></div></div>
+
+  <!-- Panel toko -->
+  <div id="shop" class="panel hidden">
+    <div class="panel-box">
+      <div class="panel-head">🛒 Toko Benih <button class="x" id="shopClose">✖</button></div>
+      <div id="shopItems"></div>
+      <p class="panel-note">Hasil panen & produk hewan dijual lewat <b>Peti Pengiriman</b> kayu di samping rumah. Berdiri di depannya lalu tekan AKSI.</p>
+    </div>
+  </div>
+
+  <!-- Layar jeda -->
+  <div id="pauseMenu" class="panel hidden">
+    <div class="panel-box center">
+      <div class="panel-head">⏸️ Jeda</div>
+      <button class="menu-btn" id="pmResume">▶️ Lanjutkan</button>
+      <button class="menu-btn" id="pmSave">💾 Simpan Permainan</button>
+      <button class="menu-btn" id="pmSound">🔊 Suara: Nyala</button>
+      <button class="menu-btn danger" id="pmRestart">🗑️ Game Baru (hapus simpanan)</button>
+    </div>
+  </div>
+
+  <!-- Layar awal -->
+  <div id="startScreen">
+    <div class="start-box">
+      <div class="logo">🌾 Yuki Valley</div>
+      <div class="tagline">Game farming pixel ala Harvest Town</div>
+      <button class="menu-btn big hidden" id="btnContinue">▶️ Lanjutkan Permainan</button>
+      <button class="menu-btn big" id="btnPlay">🌱 Game Baru</button>
+      <div class="howto">
+        <b>Cara main:</b> Jalan dengan WASD / panah / D-pad. Hadapkan karakter ke target, tekan <b>Spasi / E / AKSI</b>.<br>
+        ⛏️ Cangkul tanah → 🌱 tanam → 💧 siram → 💤 tidur di pintu rumah → ✋ panen → jual di peti kayu.<br>
+        Kunjungi 🛒 <b>stand toko</b> untuk beli benih & pupuk, perah 🐄 sapi dan pungut 🥚 telur ayam di kandang.<br>
+        Hari berjalan 06:00–22:00. Jaga ⚡ energimu. Target: kumpulkan <b>1.000 koin</b> dari hasil jualan!
+      </div>
+      <div class="credit">Asset: “Sprout Lands” oleh Cup Nooble (itch.io, paket basic gratis, non-komersial)</div>
+    </div>
+  </div>
+</div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

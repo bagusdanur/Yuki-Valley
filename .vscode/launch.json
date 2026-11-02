@@ -1,0 +1,1 @@
+{"configurations":[{"cwd":"${workspaceFolder}","name":"Debug Yuki Valley (Chrome)","request":"launch","runtimeArgs":["--remote-debugging-port=9222"],"sourceMaps":true,"type":"chrome","url":"http://localhost:5173","webRoot":"${workspaceFolder}"}],"version":"0.2.0"}
